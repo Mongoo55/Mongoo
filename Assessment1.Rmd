@@ -1,0 +1,38 @@
+---
+title: "Assessment 1.1"
+author: "Mungungerel s4647066"
+date: "05/09/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#Rmarkdown editing
+
+**_R Markdown turn the analyses into high quality documents, reports, presentation, and dashboards. Using knitr syntax we can write documents and embed executable R code chunks. To update the document re-knitting the code chunks will be used at any time. Moreover, it can be converted document into several common formats._**
+
+
+[Rstudio](https://rmarkdown.rstudio.com/lesson-8.html)
+
+install.packages("tidyverse")
+library(tidyverse)
+
+```{r}
+fastfood<-read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2018/2018-09-04/fastfood_calories.csv")
+
+fastfood%>%head(10)
+knitr::kable(head(fastfood[1:10,1:5]), "pipe")
+
+
+  fastfood%>%filter(calories>1000)
+  dont_eat_this<-fastfood
+  dont_eat_this%>%filter(total_fat>40 & total_carb>80)
+```
+
+
+```{r}
+fastfood%>%head()
+```
+
