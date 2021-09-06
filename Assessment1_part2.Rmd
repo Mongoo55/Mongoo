@@ -1,0 +1,112 @@
+---
+title: "Assessment 1.1"
+author: "Mungungerel s4647066"
+date: "05/09/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#Rmarkdown editing
+
+**_R Markdown turn the analyses into high quality documents, reports, presentation, and dashboards. Using knitr syntax we can write documents and embed executable R code chunks. To update the document re-knitting the code chunks will be used at any time. Moreover, it can be converted document into several common formats._**
+
+
+[Rstudio](https://rmarkdown.rstudio.com/lesson-8.html)
+
+install.packages("tidyverse")
+library(tidyverse)
+
+```{r}
+fastfood <- read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2018/2018-09-04/fastfood_calories.csv")
+
+fastfood%>%head(10)
+knitr::kable(head(fastfood[1:10,1:5]), "pipe")
+
+
+  fastfood%>%filter(calories>1000)
+  dont_eat_this<-fastfood
+  dont_eat_this%>%filter(total_fat>40 & total_carb>80)
+```
+
+
+```{r}
+fastfood%>%head()
+```
+
+
+#Part2
+##Q11.
+```{r}
+install.packages("skimr")
+install.packages("dplyr")
+library(skimr)
+summary(fastfood)
+```
+##Q12. Show the count of observations for each restaurant.
+
+
+```{r}
+library(tidyverse)
+fastfood <- read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2018/2018-09-04/fastfood_calories.csv")
+res_count%>%count(restaurant)  
+
+
+
+```
+#Q13. Using grouppings (group_by()), summarise and display the average number of calories for each restaurant.
+
+```{r}
+
+fastfood%>%
+  group_by(restaurant)%>%
+  summarise(mean(calories))
+
+```
+
+#Q14. Add a variable to the dataset, which calculates the average calories per type of restaurant and call it `average_calories`
+
+```{r}
+  average_calories<-
+  fastfood%>%
+  group_by(restaurant)%>%
+  summarise(average_calories=mean(calories))
+```
+
+
+#Q15.  Display the data vis of total fat per each type of restaurant. Write a narration (2-3 sentences) why you believe this type of data viz presents such information best.
+##I used geom_boxplot geometrical object to evaluate the highest value and lowest value as seen below. It can easily show the total data in two-dimensional way. 
+
+```{r}
+  library(ggplot2)
+  fastfood%>%
+  group_by(restaurant)%>%
+  summarise(mean(total_fat))
+ ggplot(data= fastfood, mapping = aes(x= restaurant, y=total_fat))+
+   geom_boxplot()
+ 
+```
+
+
+
+#Q16. Add a variable to the dataset, which calculates the maximum total fat per type of restaurant and call it `max_total_fat`
+
+  
+```{r}
+max_total_fat<-  
+fastfood%>%
+  group_by(restaurant)%>%
+  summarise(max_total_fat=mean(total_fat))
+```
+
+#Q17. Use observations for Mcdonalds to plot sugar variable against protein with `geom_point()` 
+
+```{r}
+fastfood%>%
+  filter(restaurant=="Mcdonalds") 
+ggplot(data=fastfood, mapping = aes(x=sugar, y=protein)) +
+  geom_point()
+```
+
