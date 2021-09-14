@@ -1,5 +1,5 @@
 ---
-title: "Assessment 1.1"
+title: "Assessment 1.2"
 author: "Mungungerel s4647066"
 date: "05/09/2021"
 output: html_document
@@ -17,7 +17,14 @@ knitr::opts_chunk$set(echo = TRUE)
 [Rstudio](https://rmarkdown.rstudio.com/lesson-8.html)
 
 install.packages("tidyverse")
+install.packages("skimr")
+install.packages("dplyr")
+
+```{r}
 library(tidyverse)
+```
+
+
 
 ```{r}
 fastfood <- read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2018/2018-09-04/fastfood_calories.csv")
@@ -29,6 +36,7 @@ knitr::kable(head(fastfood[1:10,1:5]), "pipe")
   fastfood%>%filter(calories>1000)
   dont_eat_this<-fastfood
   dont_eat_this%>%filter(total_fat>40 & total_carb>80)
+  
 ```
 
 
@@ -38,10 +46,9 @@ fastfood%>%head()
 
 
 #Part2
-##Q11.
+##Q11.Display the types of variables in the dataset using `skimr` package 
 ```{r}
-install.packages("skimr")
-install.packages("dplyr")
+
 library(skimr)
 summary(fastfood)
 ```
@@ -51,7 +58,8 @@ summary(fastfood)
 ```{r}
 library(tidyverse)
 fastfood <- read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2018/2018-09-04/fastfood_calories.csv")
-res_count%>%count(restaurant)  
+res_count<-fastfood%>%
+  count(restaurant)  
 
 
 
@@ -99,6 +107,7 @@ max_total_fat<-
 fastfood%>%
   group_by(restaurant)%>%
   summarise(max_total_fat=mean(total_fat))
+
 ```
 
 #Q17. Use observations for Mcdonalds to plot sugar variable against protein with `geom_point()` 
@@ -108,5 +117,6 @@ fastfood%>%
   filter(restaurant=="Mcdonalds") 
 ggplot(data=fastfood, mapping = aes(x=sugar, y=protein)) +
   geom_point()
+
 ```
 
