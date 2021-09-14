@@ -1,0 +1,162 @@
+---
+title: "Assignment2"
+output: html_document
+---
+
+
+
+## _Mungungerel_ , __s4647066__
+
+_____
+
+# Assignment 2
+
+____
+install.packages("tidyverse")
+install.packages("ggplot2")
+install.packages("knitr")
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+
+```
+
+
+
+### Part 2: Data Wrangling and visualization 38 marks
+
+### 1. Display the first 10 rows of the dataset using `kable()` function (1 marks). 
+
+```{r}
+thanks <- read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2018/2018-11-20/thanksgiving_meals.csv")
+
+library(knitr)
+```
+
+```{r}
+kable(head(thanks[10,], "pipe"))
+
+```
+
+### 2.Using `skim()` display the summary of variables. 
+
+
+
+```{r}
+library(skimr)
+summary(thanks)
+skim(thanks)
+```
+
+### 3.Use `fct_reorder` and `parse_number` functions to create a factor variable `family_income`(2 mark).
+```{r}
+
+family_income<-
+thanks$family_income<-factor(thanks$family_income)
+fct_reorder(thanks$family_income, thanks$id)
+
+```
+### 4. What is the number of people who celebrate? (1 mark) 
+
+```{r}
+thanks %>%
+  count(celebrate) %>% 
+  filter(celebrate=="Yes") %>% kable()
+```
+
+### 5. What are categories and insights for each main dish served and the method it is prepared? (2 marks)
+
+```{r}
+thanks %>%
+  count(main_dish, main_prep)%>% kable()
+
+```
+### 6. Create 3 different data viz showing insights for main dish served and the method. Provide your own legend and use themes.
+
+```{r}
+thanks %>%
+  count(main_dish, main_prep, sort=TRUE) %>%
+  ggplot(aes(main_dish,n, fill=main_prep)) +
+  geom_col()+
+  facet_wrap(main_prep~.)+
+  coord_flip()+
+  labs(x="Type of Main Dish", y="Number of items", title="Choose type of dish", caption="Image 1: Graph")+ 
+    theme_linedraw()
+```
+
+
+### 7.How many use cranberry sauce? How many use gravy? 2 marks
+
+```{r}
+
+thanks %>% 
+  count(cranberry) %>%
+  filter(cranberry=="Canned" | cranberry=="Homemade")%>% kable()
+```
+
+```{r}
+thanks %>%
+  count(gravy)%>%
+  filter(gravy=="Yes") %>% kable()
+
+```
+
+
+### 8.9. What is the distribution of those who celebrate across income ranges. Create a data viz.
+```{r}
+thanks%>%
+  count(celebrate, family_income) %>%
+  filter(celebrate=="Yes") %>%
+  group_by(family_income) %>%
+  ggplot(aes(family_income, n, fill=celebrate))+
+  geom_col()+
+  coord_flip()+
+  labs(x="Income Range", y="Number of people", title = "Who want celebrate the Thanksgiving", caption = "Image 2:Graph") +
+  theme_test()
+```
+### 10.What are the most common pies, sides, and desserts?
+
+```{r}
+thanks %>% select(starts_with("pie")) %>% gather(type,value) %>% count(value,sort = TRUE)%>%kable() 
+
+```
+```{r}
+
+thanks %>% select(starts_with("side")) %>% gather(type,value)%>% count(value, sort = TRUE)   %>%kable()  
+```
+
+
+
+```{r}
+thanks %>% select(starts_with("dessert")) %>% gather(type,value)%>% count(value, sort = TRUE)  %>%kable() 
+
+```
+
+
+  
+### 11. Present this information on a data viz
+```{r}
+thanks %>% select(starts_with("pie")) %>% gather(type,value)%>% filter(!is.na(value)) %>% mutate(value = fct_lump(value,5)) %>% ggplot(aes(value))+geom_bar(fill="458964")+coord_flip()+theme_bw()+labs(title="Most Common Pie")
+
+thanks %>% select(starts_with("side")) %>% gather(type,value)%>% filter(!is.na(value)) %>% mutate(value = fct_lump(value,5)) %>% ggplot(aes(value))+geom_bar(fill="458965")+coord_flip()+theme_bw()+labs(title="Most Common Side")
+
+thanks %>% select(starts_with("dessert")) %>% gather(type,value)%>%filter(!is.na(value)) %>% mutate(value = fct_lump(value,5)) %>% ggplot(aes(value))+geom_bar(fill="#458963")+coord_flip()+theme_bw()+labs(title="Most Common Dessert")
+
+```
+
+
+### 13.14 How do the servings differ by income? Present this information on a data viz
+```{r}
+thanks %>% filter(main_dish !='None', main_dish!="Other (please specify)") %>% count(main_dish, family_income) %>%
+  ggplot(aes(main_dish, n, color="red"))+
+  geom_col()+
+  facet_wrap(family_income ~.)+
+  coord_flip()+
+  geom_text(aes(label=round(n, digits=2)), vjust=-0.25, size=3, colour="blue")+
+  theme(legend.position = "none")+
+  labs(x="Dishes Type", y="Frequency of how those dishes are prepared", title="The most common way some Thanks Giving dishes are preprared", caption = "Graph type: Point")
+```
+
+
