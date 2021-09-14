@@ -1,5 +1,5 @@
 x---
-title: "Assessment 1.1"
+title: "Assessment 1.3"
 author: "Mungungerel s4647066"
 date: "06/09/2021"
 output: html_document
@@ -42,11 +42,7 @@ levels(restaurant)
 #Q19. Create two new variables:Read about `cut_number()` function using Help and add a new variable to the dataset `calories_type`. Use `calories` variable for `cut_number()` function to split it into 3 categories `n=3`, add labels `labels=c("low", "med", "high")` and make the dataset ordered. Do not forget to save the updated dataset. 
 
 ```{r}
-
-
-class(calories)
-
-
+fastfood$calories_type <- cut(fastfood$calories, 3, labels = c("low", "med", "high"))
 ```
 
 
@@ -57,11 +53,11 @@ class(calories)
 
 
 fastfood%>%
-ggplot(aes(x=calories, y=calcium, color=restaurant)) +
+ggplot(aes(x=calories, y=total_carb, color=restaurant)) +
   geom_line()+
 coord_flip()+
 facet_wrap(~restaurant)
-fastfood + theme_light()
+
 ```
 
 
@@ -75,11 +71,9 @@ barplot(trans_fat_percent, ylab="Percent")
 
 #Q22. Create a dataviz that shows the distribution of `trans_fat` in food items for each type of restaurant. Think carefully about the choice of data viz. Use facets, coordinates and theme layers to make your data viz visually appealing and meaningful.
 ```{r}
-library(dplyr)
-trans_fat_percent <- 
-  fastfood %>% count(restaurant, name="trans fat")
-ggplot(trans_fat_percent, aes(x=restaurant, y=trans_fat_percent, fill=restaurant))+ geom_bar(stat = "count")
 
+
+fastfood %>%ggplot(aes(trans_fat,total_fat,colour=restaurant))+geom_point()
 
 ```
 
@@ -99,9 +93,13 @@ fastfood%>%
 fastfood%>%
   group_by(restaurant)%>%
   summarise(mean(total_fat))
-ggplot(data = fastfood, mapping = aes(x=restaurant, y=total_fat) )+
-  geom_point(size=3)+
-  geom_line(colour="red")
+  ggplot(data = fastfood, mapping = aes(x=restaurant, y=total_fat) )+
+  geom_point(size=1)+
+  geom_line(colour="red")+
+    labs(title = "Total fat in each restaurant",
+     x="Restaurant",
+     y="Fat")
+
 
 ```
   
